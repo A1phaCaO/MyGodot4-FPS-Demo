@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://br0uuinjbhmqm"]
+
+[ext_resource type="Script" path="res://PlayerMove.gd" id="1_s0g83"]
+[ext_resource type="PackedScene" uid="uid://c2kjo6y65aljr" path="res://M4A1.tscn" id="2_mh6qj"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ech3j"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tnsk3"]
+albedo_color = Color(0.999999, 0.600234, 0.382009, 1)
+subsurf_scatter_strength = 1.0
+subsurf_scatter_skin_mode = true
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_e38g2"]
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+script = ExtResource("1_s0g83")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_ech3j")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.78, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_tnsk3")
+mesh = SubResource("CapsuleMesh_e38g2")
+skeleton = NodePath("")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.588, -0.548698)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+transform = Transform3D(1, 0, -1.42109e-14, 0, 1, 0, 1.42109e-14, 0, 1, 0, 0, 0.128912)
+doppler_tracking = 2
+fov = 80.0
+near = 0.01
+
+[node name="RootNode" parent="Head/Camera3D" instance=ExtResource("2_mh6qj")]
+transform = Transform3D(-0.16, 0, -1.39876e-08, 0, 0.16, 0, 1.39876e-08, 0, -0.16, 0.326, -0.388, -0.637)
+
+[editable path="Head/Camera3D/RootNode"]

@@ -1,0 +1,75 @@
+[gd_scene load_steps=11 format=3 uid="uid://b50p2tw35gog6"]
+
+[ext_resource type="PackedScene" uid="uid://br0uuinjbhmqm" path="res://Player.tscn" id="1_vmbwe"]
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_ej4fm"]
+
+[sub_resource type="Sky" id="Sky_ln1v6"]
+sky_material = SubResource("PhysicalSkyMaterial_ej4fm")
+
+[sub_resource type="Environment" id="Environment_dc2e3"]
+background_mode = 2
+sky = SubResource("Sky_ln1v6")
+ambient_light_energy = 0.0
+reflected_light_source = 2
+tonemap_mode = 2
+tonemap_white = 4.0
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
+glow_enabled = true
+glow_strength = 0.8
+glow_blend_mode = 1
+fog_aerial_perspective = 0.126
+fog_sky_affect = 0.0
+volumetric_fog_density = 1.0
+
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_72b3y"]
+auto_exposure_enabled = true
+auto_exposure_scale = 0.5
+auto_exposure_speed = 2.0
+frustum_focal_length = 15.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_weie2"]
+frequency = 0.027
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jmojp"]
+noise = SubResource("FastNoiseLite_weie2")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_brnaq"]
+albedo_color = Color(0.35, 0.35, 0.35, 1)
+albedo_texture = SubResource("NoiseTexture2D_jmojp")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_opqea"]
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_0a16e"]
+data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
+
+[node name="Main" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dc2e3")
+camera_attributes = SubResource("CameraAttributesPhysical_72b3y")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(-0.866026, -0.255271, -0.429926, 0, -0.859852, 0.510543, -0.5, 0.442143, 0.744653, 0, 0, 0)
+light_angular_distance = 0.5
+shadow_enabled = true
+directional_shadow_blend_splits = true
+directional_shadow_fade_start = 0.9
+
+[node name="CharacterBody3D" parent="WorldEnvironment" instance=ExtResource("1_vmbwe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.752, 2.06, -1.241)
+mouse_sensity = 0.2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, -0.00404263, -1.90735e-06, 0.0205936)
+material_override = SubResource("StandardMaterial3D_brnaq")
+mesh = SubResource("PlaneMesh_opqea")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_0a16e")
+
+[editable path="WorldEnvironment/CharacterBody3D"]
+[editable path="WorldEnvironment/CharacterBody3D/Head/Camera3D/RootNode"]
